@@ -11,7 +11,7 @@ const AppRouter= ({isLoggedIn})=>{
     return (
       <Router>
         {isLoggedIn && <Navigation />}
-        <switch>
+        <Switch>
           {isLoggedIn ? (
             <>
               <Route exact path="/">
@@ -30,7 +30,7 @@ const AppRouter= ({isLoggedIn})=>{
               <Redirect from="*" to="/" />
             </>
           )}
-        </switch>
+        </Switch>
       </Router>
     );
 }
