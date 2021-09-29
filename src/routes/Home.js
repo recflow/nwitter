@@ -1,8 +1,25 @@
-import React, { useState } from "react";
-import { collection, addDoc } from "firebase/firestore";
+import React, { useState, useEffect } from "react";
+import { collection, addDoc, getDocs } from "@firebase/firestore";
 import { dbService } from "fbase";
 const Home = () => {
   const [neweet, setNeweet] = useState("");
+  const [neweets, setNeweets] = useState([]);
+  const getNeweets =async()=>{
+    // const querySnapshot = dbService.collection("neweets").get();
+    // console.log(nweets);
+    const querySnapshot = await getDocs(collection(dbService, "neweets"));
+    querySnapshot.forEach((doc) => {
+      const neweetObject = {
+        ...doc.data(),
+        id: doc.id,
+      }
+      // console.log(doc.data());});
+      setNeweets(prev => [neweetObject, ...prev]);
+    });
+  }
+  useEffect(() => {
+    getNeweets();
+  }, []);
   const onSubmit = async (event) => {
     event.preventDefault();
     // collection("neweets").add({
@@ -26,6 +43,7 @@ const Home = () => {
     } = event;
     setNeweet(value);
   };
+  console.log(neweets);
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -38,6 +56,13 @@ const Home = () => {
         />
         <input type="submit" value="NEWeet" />
       </form>
+      <div>
+        {neweets.map((neweet) => (
+          <div key={neweet.id}>
+            <h4>{neweet.neweet}</h4>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
