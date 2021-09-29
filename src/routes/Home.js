@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { collection, addDoc, getDocs } from "@firebase/firestore";
+import { collection, addDoc, getDocs, onSnapshot, query, orderBy } from "@firebase/firestore";
 import { dbService } from "fbase";
-const Home = () => {
+const Home = ({ userObj }) => {
+  // console.log(userObj)
   const [neweet, setNeweet] = useState("");
   const [neweets, setNeweets] = useState([]);
-  const getNeweets =async()=>{
+  const getNeweets = async () => {
     // const querySnapshot = dbService.collection("neweets").get();
     // console.log(nweets);
     const querySnapshot = await getDocs(collection(dbService, "neweets"));
@@ -12,13 +13,24 @@ const Home = () => {
       const neweetObject = {
         ...doc.data(),
         id: doc.id,
-      }
+      };
       // console.log(doc.data());});
-      setNeweets(prev => [neweetObject, ...prev]);
+      setNeweets((prev) => [neweetObject, ...prev]);
     });
-  }
+  };
   useEffect(() => {
     getNeweets();
+    // dbService.collection("neweets").onSnapshot(snapshot=>{
+    //   console.log("something happened");
+    // });
+    const collectionQuery = query(collection(dbService, "neweets"), orderBy("createdAt", "desc"));
+    onSnapshot(collectionQuery, (snapshot) => {
+      const neweetsArray = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setNeweets(neweetsArray)
+    });
   }, []);
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -27,11 +39,13 @@ const Home = () => {
     //   createAt: Date.now()
     // });
     try {
-      const docRef = await addDoc(collection(dbService, "neweets"), {
-        neweet,
-        createAt: Date.now()
+      // const docRef = 
+      await addDoc(collection(dbService, "neweets"), {
+        text: neweet,
+        createdAt: Date.now(),
+        creatorId: userObj.uid,
       });
-      console.log("Document written with ID: ", docRef.id);
+      // console.log("Document written with ID: ", docRef.id);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -43,7 +57,7 @@ const Home = () => {
     } = event;
     setNeweet(value);
   };
-  console.log(neweets);
+  // console.log(neweets);
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -59,7 +73,7 @@ const Home = () => {
       <div>
         {neweets.map((neweet) => (
           <div key={neweet.id}>
-            <h4>{neweet.neweet}</h4>
+            <h4>{neweet.text}</h4>
           </div>
         ))}
       </div>

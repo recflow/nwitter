@@ -6,32 +6,31 @@ import Home from "routes/Home";
 import Profile from "routes/Profile";
 import Navigation from "components/Navigation";
 
-const AppRouter= ({isLoggedIn})=>{
-   
-    return (
-      <Router>
-        {isLoggedIn && <Navigation />}
-        <Switch>
-          {isLoggedIn ? (
-            <>
-              <Route exact path="/">
-                <Home />
-              </Route>
-              <Route exact path="/profile">
-                <Profile />
-              </Route>
-              <Redirect from="*" to="/" />
-            </>
-          ) : (
-            <>
-              <Route exact paht="/">
-                <Auth />
-              </Route>
-              <Redirect from="*" to="/" />
-            </>
-          )}
-        </Switch>
-      </Router>
-    );
-}
+const AppRouter = ({ isLoggedIn, userObj }) => {
+  return (
+    <Router>
+      {isLoggedIn && <Navigation />}
+      <Switch>
+        {isLoggedIn ? (
+          <>
+            <Route exact path="/">
+              <Home userObj={userObj} />
+            </Route>
+            <Route exact path="/profile">
+              <Profile />
+            </Route>
+            <Redirect from="*" to="/" />
+          </>
+        ) : (
+          <>
+            <Route exact paht="/">
+              <Auth />
+            </Route>
+            <Redirect from="*" to="/" />
+          </>
+        )}
+      </Switch>
+    </Router>
+  );
+};
 export default AppRouter;
