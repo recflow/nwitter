@@ -1,47 +1,48 @@
 import React, { useState, useEffect } from "react";
 import { collection, addDoc, getDocs, onSnapshot, query, orderBy } from "@firebase/firestore";
 import { dbService } from "fbase";
+import Newit from "components/Newit";
 const Home = ({ userObj }) => {
   // console.log(userObj)
-  const [neweet, setNeweet] = useState("");
-  const [neweets, setNeweets] = useState([]);
-  const getNeweets = async () => {
-    // const querySnapshot = dbService.collection("neweets").get();
-    // console.log(nweets);
-    const querySnapshot = await getDocs(collection(dbService, "neweets"));
+  const [newit, setNewit] = useState("");
+  const [newits, setNewits] = useState([]);
+  const getnewits = async () => {
+    // const querySnapshot = dbService.collection("newits").get();
+    // console.log(newits);
+    const querySnapshot = await getDocs(collection(dbService, "newits"));
     querySnapshot.forEach((doc) => {
-      const neweetObject = {
+      const newitObject = {
         ...doc.data(),
         id: doc.id,
       };
       // console.log(doc.data());});
-      setNeweets((prev) => [neweetObject, ...prev]);
+      setNewits((prev) => [newitObject, ...prev]);
     });
   };
   useEffect(() => {
-    getNeweets();
-    // dbService.collection("neweets").onSnapshot(snapshot=>{
+    getnewits();
+    // dbService.collection("newits").onSnapshot(snapshot=>{
     //   console.log("something happened");
     // });
-    const collectionQuery = query(collection(dbService, "neweets"), orderBy("createdAt", "desc"));
+    const collectionQuery = query(collection(dbService, "newits"), orderBy("createdAt", "desc"));
     onSnapshot(collectionQuery, (snapshot) => {
-      const neweetsArray = snapshot.docs.map((doc) => ({
+      const newitsArray = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      setNeweets(neweetsArray)
+      setNewits(newitsArray)
     });
   }, []);
   const onSubmit = async (event) => {
     event.preventDefault();
-    // collection("neweets").add({
-    //   neweet,
+    // collection("newits").add({
+    //   newit,
     //   createAt: Date.now()
     // });
     try {
       // const docRef = 
-      await addDoc(collection(dbService, "neweets"), {
-        text: neweet,
+      await addDoc(collection(dbService, "newits"), {
+        text: newit,
         createdAt: Date.now(),
         creatorId: userObj.uid,
       });
@@ -49,32 +50,30 @@ const Home = ({ userObj }) => {
     } catch (e) {
       console.error("Error adding document: ", e);
     }
-    setNeweet("");
+    setNewit("");
   };
   const onChange = (event) => {
     const {
       target: { value },
     } = event;
-    setNeweet(value);
+    setNewit(value);
   };
-  // console.log(neweets);
+  // console.log(newits);
   return (
     <div>
       <form onSubmit={onSubmit}>
         <input
-          value={neweet}
+          value={newit}
           onChange={onChange}
           type="text"
           placeholder="무슨 일이 일어나고 있나요?"
           maxLength={140}
         />
-        <input type="submit" value="NEWeet" />
+        <input type="submit" value="newit" />
       </form>
       <div>
-        {neweets.map((neweet) => (
-          <div key={neweet.id}>
-            <h4>{neweet.text}</h4>
-          </div>
+        {newits.map((newit) => (
+          <Newit key={newit.id} newitObj={newit} isOwner={newit.creatorId===userObj.uid}/>
         ))}
       </div>
     </div>
