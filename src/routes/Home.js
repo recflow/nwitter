@@ -59,6 +59,19 @@ const Home = ({ userObj }) => {
     setNewit(value);
   };
   // console.log(newits);
+  const onFileChange = (event) =>{
+    // console.log(event.target.files)
+    const {
+      target: { files },
+    } = event;
+    const theFile = files[0];
+    // console.log(theFile)
+    const reader =new FileReader();
+    reader.onloadend = (finishedEvent) => {
+      console.log(finishedEvent);
+    };
+    reader.readAsDataURL(theFile);
+  }
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -69,11 +82,16 @@ const Home = ({ userObj }) => {
           placeholder="무슨 일이 일어나고 있나요?"
           maxLength={140}
         />
+        <input type="file" accept="image/*" onChange={onFileChange}/>
         <input type="submit" value="newit" />
       </form>
       <div>
         {newits.map((newit) => (
-          <Newit key={newit.id} newitObj={newit} isOwner={newit.creatorId===userObj.uid}/>
+          <Newit
+            key={newit.id}
+            newitObj={newit}
+            isOwner={newit.creatorId === userObj.uid}
+          />
         ))}
       </div>
     </div>
