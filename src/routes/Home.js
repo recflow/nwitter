@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { collection, addDoc, getDocs, onSnapshot, query, orderBy } from "@firebase/firestore";
-import { dbService } from "fbase";
+import { dbService, storageService } from "fbase";
 import Newit from "components/Newit";
+import { v4 as uuidv4 } from 'uuid';
+import { uploadString,ref } from "@firebase/storage";
+
 const Home = ({ userObj }) => {
   // console.log(userObj)
   const [newit, setNewit] = useState("");
@@ -36,11 +39,16 @@ const Home = ({ userObj }) => {
   }, []);
   const onSubmit = async (event) => {
     event.preventDefault();
+    // const fileRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
+    // const response = await fileRef.putString(attachment, "data_url");
+    const fileRef=ref(storageService, `${userObj.uid}/${uuidv4()}`);
+    const response = await uploadString(fileRef, attachment, "data_url");
+    console.log(response);
     // collection("newits").add({
     //   newit,
     //   createAt: Date.now()
     // });
-    try {
+/*    try {
       // const docRef = 
       await addDoc(collection(dbService, "newits"), {
         text: newit,
@@ -51,7 +59,7 @@ const Home = ({ userObj }) => {
     } catch (e) {
       console.error("Error adding document: ", e);
     }
-    setNewit("");
+    setNewit("");*/
   };
   const onChange = (event) => {
     const {
