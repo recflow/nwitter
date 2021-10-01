@@ -88,9 +88,8 @@ const Home = ({ userObj }) => {
     
   }
 
-  const onClearAttachmentClick = () =>{ setAttachment(null)
+  const onClearAttachmentClick = () => setAttachment(null);
 
-  }
   return (
     <div>
       <form onSubmit={onSubmit}>

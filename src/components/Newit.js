@@ -1,5 +1,6 @@
 import { deleteDoc, doc, updateDoc } from '@firebase/firestore'
-import { dbService } from 'fbase'
+import { deleteObject,ref } from '@firebase/storage';
+import { dbService, storageService } from 'fbase'
 import React, {useState} from 'react'
 
 const Newit = ({newitObj,isOwner}) => {
@@ -10,6 +11,7 @@ const Newit = ({newitObj,isOwner}) => {
         if(ok){
             // await dbService.doc(`gnweets/${nweetObj.id}`).delete();
             await deleteDoc(doc(dbService,`newits/${newitObj.id}`))
+            await deleteObject(ref(storageService, newitObj.attachmentURL));
         }
 
     }
