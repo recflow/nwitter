@@ -6,6 +6,7 @@ const Home = ({ userObj }) => {
   // console.log(userObj)
   const [newit, setNewit] = useState("");
   const [newits, setNewits] = useState([]);
+  const [attachment, setAttachment] = useState();
   const getnewits = async () => {
     // const querySnapshot = dbService.collection("newits").get();
     // console.log(newits);
@@ -68,9 +69,17 @@ const Home = ({ userObj }) => {
     // console.log(theFile)
     const reader =new FileReader();
     reader.onloadend = (finishedEvent) => {
-      console.log(finishedEvent);
+      const {
+        currentTarget: { result },
+      } = finishedEvent;
+      setAttachment(result);
     };
     reader.readAsDataURL(theFile);
+    
+  }
+
+  const onClearAttachmentClick = () =>{ setAttachment(null)
+
   }
   return (
     <div>
@@ -82,8 +91,14 @@ const Home = ({ userObj }) => {
           placeholder="무슨 일이 일어나고 있나요?"
           maxLength={140}
         />
-        <input type="file" accept="image/*" onChange={onFileChange}/>
+        <input type="file" accept="image/*" onChange={onFileChange} />
         <input type="submit" value="newit" />
+        {attachment && (
+          <div>
+            <img src={attachment} width="50px" height="50px" alt="profile"/>
+            <button onClick={onClearAttachmentClick}>업로드 취소</button>
+          </div>
+        )}
       </form>
       <div>
         {newits.map((newit) => (
