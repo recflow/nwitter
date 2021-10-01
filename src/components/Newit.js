@@ -45,6 +45,7 @@ const Newit = ({newitObj,isOwner}) => {
         ) : (
           <>
             <h4>{newitObj.text}</h4>
+            {newitObj.attachmentURL && <img src={newitObj.attachmentURL} width="50px" height="50px" alt="profile"/>}
             {isOwner && (
               <>
                 <button onClick={onDeleteClick}>삭제</button>

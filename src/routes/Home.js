@@ -3,7 +3,7 @@ import { collection, addDoc, getDocs, onSnapshot, query, orderBy } from "@fireba
 import { dbService, storageService } from "fbase";
 import Newit from "components/Newit";
 import { v4 as uuidv4 } from 'uuid';
-import { uploadString,ref } from "@firebase/storage";
+import { uploadString,ref,getDownloadURL } from "@firebase/storage";
 
 const Home = ({ userObj }) => {
   // console.log(userObj)
@@ -41,25 +41,27 @@ const Home = ({ userObj }) => {
     event.preventDefault();
     // const fileRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
     // const response = await fileRef.putString(attachment, "data_url");
-    const fileRef=ref(storageService, `${userObj.uid}/${uuidv4()}`);
-    const response = await uploadString(fileRef, attachment, "data_url");
-    console.log(response);
-    // collection("newits").add({
-    //   newit,
-    //   createAt: Date.now()
-    // });
-/*    try {
-      // const docRef = 
-      await addDoc(collection(dbService, "newits"), {
+    let attachmentURL="";
+    if(attachment !== ""){
+      const attachmentRef = ref(storageService, `${userObj.uid}/${uuidv4()}`);
+      const uploadFile = await uploadString(
+        attachmentRef,
+        attachment,
+        "data_url"
+      );
+      attachmentURL = await getDownloadURL(uploadFile.ref);
+    }
+      const newitPosting = {
         text: newit,
         createdAt: Date.now(),
         creatorId: userObj.uid,
-      });
-      // console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-    setNewit("");*/
+        attachmentURL,
+      };
+    
+
+    await addDoc(collection(dbService, "newits"), newitPosting);
+    setNewit("");
+    setAttachment("");
   };
   const onChange = (event) => {
     const {
