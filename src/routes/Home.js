@@ -9,7 +9,7 @@ const Home = ({ userObj }) => {
   // console.log(userObj)
   const [newit, setNewit] = useState("");
   const [newits, setNewits] = useState([]);
-  const [attachment, setAttachment] = useState();
+  const [attachment, setAttachment] = useState(""); //5.0 파일 업로드를 하지 않고 텍스트만 업로드 할 때 에러나지 않도록 수정
   const getnewits = async () => {
     // const querySnapshot = dbService.collection("newits").get();
     // console.log(newits);
