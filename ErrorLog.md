@@ -1,5 +1,4 @@
 # 작업시 에러 모음
-
 ### 1. 로그아웃 시 메모리 누수 이슈가 존재함.
 
 - 증상
@@ -57,3 +56,19 @@ errors.ts:91 Uncaught (in promise) FirebaseError: Firebase: Error (auth/account-
 ```
 >처음에 처리 했던 것 같은데 왜 발생하는 것일까? 에러 발생시 에러 페이지로 이동하는 것이 아니라 메세지를 보여주는 방식으로 변경해야한다.
 
+-----
+### 7. gh-pages 배치 파일이 아니라고 나는 에러
+
+나는 분명 npm i gh-pages를 통해 설치를 했다:(
+하지만 찾을 수 없었고 검색을 해보니 rebuild를 위한 빈 커밋을 하나 생성하라는 해결 방법을 보았다.
+
+```c
+git commit --allow-empty -m "rebuild"
+git push origin master
+```
+
+명령어를 실행해준 다음에 다시 gh-pages를 설치해주고 
+```c
+npm run deploy
+```
+를 이용하여 배포하니 배포에 성공하였다.
