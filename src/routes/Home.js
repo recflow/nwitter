@@ -37,9 +37,9 @@ const Home = ({ userObj }) => {
     });
   }, []);
   return (
-    <div>
+    <div className="container">
       <NewitFactory userObj={userObj} />
-      <div>
+      <div style={{ marginTop: 30 }}>
         {newits.map((newit) => (
           <Newit
             key={newit.id}

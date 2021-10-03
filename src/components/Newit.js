@@ -2,6 +2,8 @@ import { deleteDoc, doc, updateDoc } from '@firebase/firestore'
 import { deleteObject,ref } from '@firebase/storage';
 import { dbService, storageService } from 'fbase'
 import React, {useState} from 'react'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash, faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 
 const Newit = ({newitObj,isOwner}) => {
     const [editing, setEditing] = useState(false);
@@ -29,30 +31,38 @@ const Newit = ({newitObj,isOwner}) => {
         setNewNewit(value);
     }
     return (
-      <div>
+      <div className="nweet">
         {editing ? (
           <>
-            <form onSubmit={onSubmit}>
+            <form onSubmit={onSubmit} className="container nweetEdit">
               <input
                 type="text"
                 placeholder="Edit your newit"
                 value={newNewit}
                 required
+                autoFocus
                 onChange={onChange}
+                className="formInput"
               />
-              <input type="submit" value="수정"/>
+              <input type="submit" value="수정" className="formBtn" />
             </form>
-            <button onClick={toggleEditing}>취소</button>
+            <span onClick={toggleEditing} className="formBtn cancelBtn">
+              Cancel
+            </span>
           </>
         ) : (
           <>
             <h4>{newitObj.text}</h4>
-            {newitObj.attachmentURL && <img src={newitObj.attachmentURL} width="50px" height="50px" alt="profile"/>}
+            {newitObj.attachmentURL && <img src={newitObj.attachmentURL} alt="profile" />}
             {isOwner && (
-              <>
-                <button onClick={onDeleteClick}>삭제</button>
-                <button onClick={toggleEditing}>수정</button>
-              </>
+              <div className="nweet__actions">
+                <span onClick={onDeleteClick}>
+                  <FontAwesomeIcon icon={faTrash} />
+                </span>
+                <span onClick={toggleEditing}>
+                  <FontAwesomeIcon icon={faPencilAlt} />
+                </span>
+              </div>
             )}
           </>
         )}
